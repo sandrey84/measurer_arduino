@@ -4,12 +4,8 @@
 Servo headServo;
 const int HEAD_SERVO_PIN = 8;
 
-//program variables
-int headServoAngle;
-
 void servoSetup() { 
   reattachHeadServo(510, 1380);
-  headServoAngle = headServo.read();
 } 
 
 void moveHead(int angle) {
