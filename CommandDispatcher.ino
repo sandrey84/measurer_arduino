@@ -18,27 +18,22 @@ void commandServiceSetup() {
 } 
 
 void parseAndExecute(String toParse) {
-  logError("here_1");
   if (isCommand(toParse, MOVE_HEAD)) {
-    logError("here_2");
     moveHead(getIntParamValue(toParse, VALUE_PARAM));
   } else if (isCommand(toParse, REATTACH_SERVO)) {
       reattachHeadServo(
           getIntParamValue(toParse, MIN_PARAM),
           getIntParamValue(toParse, MAX_PARAM));
   } else if (isCommand(toParse, SCAN_SINGLE)) {
-    logError("here_3");
       String distanceAsString = "cm: ";
       distanceAsString += measureDistanceInCm();
       logInfo(distanceAsString);
   } else if (isCommand(toParse, SCAN)) {
-    logError("here_4");
     logInfo("scan");
     logInfo(doScan(
       getIntParamValue(toParse, MIN_PARAM),
       getIntParamValue(toParse, MAX_PARAM)));
   }
-  logError("here_5");
 }
 
 boolean isCommand(String commandWithParams, String command) {
