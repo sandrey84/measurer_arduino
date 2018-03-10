@@ -5,6 +5,7 @@ void setup() {
   commandServiceSetup();
   servoSetup();
   ultraSonicSetup();
+  logInfo("setup completed");
 }
 
 

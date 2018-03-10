@@ -9,6 +9,6 @@ NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE_CM);
 void ultraSonicSetup() { 
 } 
 
-int doScan() {
+int measureDistanceInCm() {
   return sonar.convert_cm(sonar.ping_median());
 }
