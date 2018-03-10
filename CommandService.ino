@@ -1,5 +1,3 @@
-#include <Servo.h>
-#include <NewPing.h>
 
 //params constants
 const String PARAMS_MARKER = "?";
@@ -15,49 +13,14 @@ const String MIN_PARAM= "min";
 const String MAX_PARAM = "max";
 const String VALUE_PARAM = "value";
 
-//init devides
-Servo myservo;
-const int SERVO_PIN = 8;
+void commandServiceSetup() { 
+} 
 
-
-const int TRIGGER_PIN = 6;
-const int ECHO_PIN = 7;
-const int MAX_DISTANCE_CM = 600;
-NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE_CM);
-
-//program variables
-int position;
-
-String inputString = "";
-boolean stringComplete = false;
-
-
-void setup() {
-  Serial.begin(9600);
-//  inputString.reserve(200);
-
-  reattachServo(520, 1310);
-  position = myservo.read();
-}
-
-void loop() {
-  delay(10); 
-  verifyIncomeCommand();
-}
-
-void verifyIncomeCommand() {
-  if (stringComplete) {
-    executeCommand(inputString);
-    inputString = "";
-    stringComplete = false;
-  }
-}
-
-void executeCommand(String toParse) {
+void parseAndExecute(String toParse) {
   if (isCommand(toParse, MOVE_HEAD)) {
     moveHead(getIntParamValue(toParse, VALUE_PARAM));
   } else if (isCommand(toParse, REATTACH_SERVO)) {
-    reattachServo(
+    reattachHeadServo(
        getIntParamValue(toParse, MIN_PARAM),
        getIntParamValue(toParse, MAX_PARAM));
   } else if (isCommand(toParse, SCAN_SINGLE)) {
@@ -95,41 +58,4 @@ int getIntParamValue(String toParse, String paramName) {
   }
   
   return valueAsString.toInt();
-}
-
-void moveHead(int angle) {
-    if(angle < 0 || angle > 180) {
-      Serial.print("angle must be [0, 180]");
-      return;
-    }
-
-    myservo.write(angle);
-}
-
-void reattachServo(int min, int max) {
-  myservo.detach();
-  myservo.attach(SERVO_PIN, min, max);
-
-  String message = "reattached[";
-  message += min;
-  message += ", ";
-  message += max;
-  message += "]";
-  Serial.print(message);
-}
-
-int doScan() {
-  return sonar.convert_cm(sonar.ping_median());
-}
-
-void serialEvent() {
-  while (Serial.available()) {
-    char inChar = (char)Serial.read();
-    
-    if (inChar == '\n') {
-      stringComplete = true;
-    } else {
-      inputString += inChar;
-    }
-  }
 }
