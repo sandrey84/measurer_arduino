@@ -25,7 +25,7 @@ int nextAngle(int currentAngle, int maxAngle) {
 }
 
 String concateData(int minAngle, int maxAngle) {
-  String concatedData = "";
+  String concatedData = "SCAN_RESULT_";
   
   for(int i = minAngle; i <= maxAngle; i++) {
       concatedData += i;
@@ -33,7 +33,7 @@ String concateData(int minAngle, int maxAngle) {
       concatedData += distances[i];
 
       if (i != maxAngle) {
-        concatedData += ", ";
+        concatedData += ",";
       }
   }
 
