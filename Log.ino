@@ -7,12 +7,12 @@ boolean errorLogEnabled = true;
  
 void logInfo(String toLog) {
   if(infoLogEnabled) {
-    Serial.println(INFO_LOG_PREFIX + toLog);
+    dataChannelWrite(INFO_LOG_PREFIX + toLog);
   }
 }
 
 void logError(String toLog) {
   if(errorLogEnabled) {
-    Serial.println(ERROR_LOG_PREFIX + toLog);
+    dataChannelWrite(ERROR_LOG_PREFIX + toLog);
   }
 }

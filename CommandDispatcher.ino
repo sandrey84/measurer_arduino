@@ -6,7 +6,7 @@ const String NEXT_PARAM_MARKER = "&";
 //commands
 const String MOVE_HEAD = "MOVE_HEAD";
 const String SCAN = "SCAN";
-const String SCAN_SINGLE = "SCAN_SINGLE";
+const String SCAN_SINGLE = "SINGLE_SCAN";
 const String REATTACH_SERVO = "REATTACH_SERVO";
 
 //command params
@@ -17,7 +17,7 @@ const String VALUE_PARAM = "value";
 void commandServiceSetup() { 
 } 
 
-void parseAndExecute(String toParse) {
+void parseCommand(String toParse) {
   if (isCommand(toParse, MOVE_HEAD)) {
     moveHead(getIntParamValue(toParse, VALUE_PARAM));
   } else if (isCommand(toParse, REATTACH_SERVO)) {
@@ -25,14 +25,13 @@ void parseAndExecute(String toParse) {
           getIntParamValue(toParse, MIN_PARAM),
           getIntParamValue(toParse, MAX_PARAM));
   } else if (isCommand(toParse, SCAN_SINGLE)) {
-      String distanceAsString = "cm: ";
-      distanceAsString += measureDistanceInCm();
-      logInfo(distanceAsString);
+      dataChannelWrite(doSingleScan());
   } else if (isCommand(toParse, SCAN)) {
-    logInfo("scan");
-    logInfo(doScan(
-      getIntParamValue(toParse, MIN_PARAM),
-      getIntParamValue(toParse, MAX_PARAM)));
+      dataChannelWrite(doScan(
+          getIntParamValue(toParse, MIN_PARAM),
+          getIntParamValue(toParse, MAX_PARAM)));
+  } else {
+    logError("unknown command: " + toParse);
   }
 }
 
@@ -54,7 +53,7 @@ int getIntParamValue(String toParse, String paramName) {
   }
 
   if(paramStartPosition == -1) {
-     logError("requested unexists int param");
+     logError("requested unexists param: '" + paramName + "', command: " + toParse);
      return 0;
   }
     

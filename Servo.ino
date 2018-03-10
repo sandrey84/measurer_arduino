@@ -5,12 +5,14 @@ Servo headServo;
 const int HEAD_SERVO_PIN = 8;
 
 void servoSetup() { 
-  reattachHeadServo(510, 1380);
+  reattachHeadServo(510, 1250);
 } 
 
 void moveHead(int angle) {
     if(angle < 0 || angle > 180) {
-      logError("angle must be [0, 180]");
+      String error = "angle must be [0, 180], actual: ";
+      error += angle;
+      logError(error);
       return;
     }
 
@@ -26,5 +28,5 @@ void reattachHeadServo(int minPwm, int maxPwm) {
   message += ", ";
   message += maxPwm;
   message += "]";
-  Serial.print(message);
+  logInfo(message);
 }

@@ -1,7 +1,12 @@
-
+const String SINGLE_SCAN_RESULT = "SINGLE_SCAN_RESULT_";
+const String SCAN_RESULT = "SCAN_RESULT_";
 
 int distances[180];
 
+String doSingleScan() {
+  String result = SINGLE_SCAN_RESULT + measureDistanceInCm();  
+  return result;
+}
 
 String doScan(int minAngle, int maxAngle) {
   moveHead(minAngle);
@@ -10,7 +15,6 @@ String doScan(int minAngle, int maxAngle) {
 
   while (currentAngle != -1) {
     moveHead(currentAngle);
-    delay(10);
     distances[currentAngle] = measureDistanceInCm();
     currentAngle = nextAngle(currentAngle, maxAngle);
   }
@@ -19,13 +23,13 @@ String doScan(int minAngle, int maxAngle) {
 }
 
 int nextAngle(int currentAngle, int maxAngle) {
-  return currentAngle <= maxAngle
+  return currentAngle < maxAngle
       ? currentAngle + 1
       : -1;
 }
 
 String concateData(int minAngle, int maxAngle) {
-  String concatedData = "SCAN_RESULT_";
+  String concatedData = SCAN_RESULT;
   
   for(int i = minAngle; i <= maxAngle; i++) {
       concatedData += i;
