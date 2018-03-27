@@ -4,32 +4,50 @@ const String PARAMS_MARKER = "?";
 const String NEXT_PARAM_MARKER = "&";
 
 //commands
-const String MOVE_HEAD = "MOVE_HEAD";
+const String MOVE_LEFT_HEAD = "MOVE_LEFT_HEAD";
+const String MOVE_RIGHT_HEAD = "MOVE_RIGHT_HEAD";
 const String SCAN = "SCAN";
-const String SCAN_SINGLE = "SINGLE_SCAN";
-const String REATTACH_SERVO = "REATTACH_SERVO";
+const String LEFT_SCAN = "LEFT_SCAN";
+const String RIGHT_SCAN = "RIGHT_SCAN";
+const String REATTACH_SERVOS = "REATTACH_SERVOS";
+const String MOVE = "MOVE";
 
 //command params
 const String MIN_PARAM= "min";
 const String MAX_PARAM = "max";
 const String VALUE_PARAM = "value";
+const String LEFT_MS = "left_ms";
+const String RIGHT_MS = "right_ms";
+const String LEFT_POWER = "left_power";
+const String RIGHT_POWER = "right_power";
 
 void commandServiceSetup() { 
 } 
 
 void parseCommand(String toParse) {
-  if (isCommand(toParse, MOVE_HEAD)) {
-    moveHead(getIntParamValue(toParse, VALUE_PARAM));
-  } else if (isCommand(toParse, REATTACH_SERVO)) {
-      reattachHeadServo(
+  if (isCommand(toParse, MOVE_LEFT_HEAD)) {
+    moveLeftHead(getIntParamValue(toParse, VALUE_PARAM));
+  } else if(isCommand(toParse, MOVE_RIGHT_HEAD)) {
+    moveRightHead(getIntParamValue(toParse, VALUE_PARAM));
+  } else if (isCommand(toParse, REATTACH_SERVOS)) {
+      reattachHeadServos(
           getIntParamValue(toParse, MIN_PARAM),
           getIntParamValue(toParse, MAX_PARAM));
-  } else if (isCommand(toParse, SCAN_SINGLE)) {
-      dataChannelWrite(doSingleScan());
+  } else if (isCommand(toParse, LEFT_SCAN)) {
+      dataChannelWrite(doLeftScan());
+  } else if (isCommand(toParse, RIGHT_SCAN)) {
+      dataChannelWrite(doRightScan());
   } else if (isCommand(toParse, SCAN)) {
       dataChannelWrite(doScan(
           getIntParamValue(toParse, MIN_PARAM),
           getIntParamValue(toParse, MAX_PARAM)));
+  } else if (isCommand(toParse, MOVE)) {
+     moveChassis(
+          getIntParamValue(toParse, LEFT_MS),
+          getIntParamValue(toParse, LEFT_POWER),
+          getIntParamValue(toParse, RIGHT_MS),
+          getIntParamValue(toParse, RIGHT_POWER)
+      );
   } else {
     logError("unknown command: " + toParse);
   }

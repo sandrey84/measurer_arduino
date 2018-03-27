@@ -1,25 +1,54 @@
-const String SINGLE_SCAN_RESULT = "SINGLE_SCAN_RESULT_";
+const String LEFT_SCAN_RESULT = "LEFT_SCAN_RESULT_";
+const String RIGHT_SCAN_RESULT = "RIGHT_SCAN_RESULT_";
 const String SCAN_RESULT = "SCAN_RESULT_";
 
-int distances[180];
+int distances[360];
 
-String doSingleScan() {
-  String result = SINGLE_SCAN_RESULT + measureDistanceInCm();  
+String doLeftScan() {
+  String result = LEFT_SCAN_RESULT + leftMeasureDistanceInCm();  
   return result;
 }
 
+String doRightScan() {
+  String result = RIGHT_SCAN_RESULT + rightMeasureDistanceInCm();  
+  return result;
+}
+
+
 String doScan(int minAngle, int maxAngle) {
-  moveHead(minAngle);
-  delay(1500);
+  selectHeadAndMove(minAngle);
   int currentAngle = minAngle;
 
   while (currentAngle != -1) {
-    moveHead(currentAngle);
-    distances[currentAngle] = measureDistanceInCm();
+    selectHeadAndMove(currentAngle);
+    distances[currentAngle] = selectSonarAndMeasure(currentAngle);
     currentAngle = nextAngle(currentAngle, maxAngle);
   }
 
   return concateData(minAngle, maxAngle);
+}
+
+void selectHeadAndMove(int angle) {
+  if(angle > 180) {
+    moveRightHead(angle - 180);
+    waitForServoPositioned(angle);
+    return;
+  }
+
+  moveLeftHead(angle);
+  waitForServoPositioned(angle);
+}
+
+void waitForServoPositioned(int angle) {
+  if (angle == 0 || angle == 181) {
+    delay(1000);
+  }
+}
+
+int selectSonarAndMeasure(int angle) {
+  return angle > 180 
+     ? rightMeasureDistanceInCm()
+     : leftMeasureDistanceInCm();
 }
 
 int nextAngle(int currentAngle, int maxAngle) {
